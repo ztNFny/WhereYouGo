@@ -40,6 +40,7 @@
 
 package menion.android.whereyougo.utils;
 
+import android.app.NotificationChannel;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -107,7 +108,11 @@ public class NotificationService extends Service {
         intent.setAction(Intent.ACTION_MAIN);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        String CHANNEL_ID = "wyg_service";
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Notification Service", NotificationManager.IMPORTANCE_DEFAULT);
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         builder.setContentTitle(contentTitel);
         builder.setSmallIcon(R.drawable.ic_title_logo);
         builder.setContentIntent(pendingIntent);
