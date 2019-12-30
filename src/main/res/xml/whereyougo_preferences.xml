@@ -94,6 +94,11 @@
                 android:key="@string/pref_KEY_B_RUN_SCREEN_OFF"
                 android:summary="@string/pref_run_screen_off_desc"
                 android:title="@string/pref_run_screen_off" />
+            <CheckBoxPreference
+                android:defaultValue="@string/pref_DEFAULT_CHEATMODE"
+                android:key="@string/pref_KEY_B_CHEATMODE"
+                android:summary="@string/pref_cheatmode_desc"
+                android:title="@string/pref_cheatmode" />
         </PreferenceCategory>
 
         <!--

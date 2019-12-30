@@ -17,6 +17,7 @@ package menion.android.whereyougo.maps.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import menion.android.whereyougo.gui.activity.wherigo.DetailsActivity;
 import menion.android.whereyougo.gui.utils.UtilsWherigo;
 import menion.android.whereyougo.maps.container.MapPoint;
 import menion.android.whereyougo.maps.container.MapPointPack;
-import menion.android.whereyougo.preferences.PreferenceValues;
 import menion.android.whereyougo.preferences.Preferences;
 
 public class VectorMapDataProvider implements MapDataProvider {
@@ -107,7 +107,9 @@ public class VectorMapDataProvider implements MapDataProvider {
     }
 
     public void addZone(Zone z, boolean mark) {
-        if (z == null || !z.isLocated() || !z.isVisible())
+        if (z == null || !z.isLocated())
+            return;
+        if (!z.isVisible() && !Preferences.getBooleanPreference(R.string.pref_KEY_B_CHEATMODE))
             return;
 
         MapPointPack border = new MapPointPack();
@@ -117,16 +119,37 @@ public class VectorMapDataProvider implements MapDataProvider {
         }
         if (border.getPoints().size() >= 3)
             border.getPoints().add(border.getPoints().get(0));
+        // mark = navigation target
+        if (mark)
+            border.setResource(Color.GREEN);
+        else {
+            // Set line color: normal zone = red; invisible zone = blue
+            if (z.isVisible())
+                border.setResource(Color.RED);
+            else
+                border.setResource(Color.BLUE);
+        }
         items.add(border);
 
         MapPointPack pack = new MapPointPack();
         Location location = UtilsWherigo.extractLocation(z);
-        MapPoint mapPoint = new MapPoint(z.name, z.description, location.getLatitude(), location.getLongitude(), mark);
+        MapPoint mapPoint;
+        if (location.getLatitude()==0)
+            if (z.position != null)
+                mapPoint = new MapPoint(z.name, z.description, z.position.latitude, z.position.longitude, mark);
+            else
+                mapPoint = new MapPoint(z.name, z.description, z.bbCenter.latitude, z.bbCenter.longitude, mark);
+        else
+            mapPoint = new MapPoint(z.name, z.description, location.getLatitude(), location.getLongitude(), mark);
+
         pack.getPoints().add(mapPoint);
         if (mark)
             pack.setResource(R.drawable.marker_green);
         else
-            pack.setResource(R.drawable.marker_red);
+            if (z.isVisible())
+                pack.setResource(R.drawable.marker_red);
+            else
+                pack.setResource(R.drawable.marker_eyeoffoutline);
         items.add(pack);
     }
 

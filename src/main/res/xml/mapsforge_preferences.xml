@@ -21,6 +21,11 @@
             android:key="textScale"
             android:summary="@string/preferences_text_scale_desc"
             android:title="@string/preferences_text_scale" />
+        <CheckBoxPreference
+            android:defaultValue="@string/pref_DEFAULT_CHEATMODE"
+            android:key="@string/pref_KEY_B_CHEATMODE"
+            android:summary="@string/pref_cheatmode_desc"
+            android:title="@string/pref_cheatmode" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preferences_general">

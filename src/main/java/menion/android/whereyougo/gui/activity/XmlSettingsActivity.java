@@ -409,6 +409,9 @@ public class XmlSettingsActivity extends PreferenceActivity
             boolean newValue = sharedPreferences.getBoolean(key, false);
             Preferences.GLOBAL_RUN_SCREEN_OFF = Utils.parseBoolean(newValue);
             PreferenceValues.enableWakeLock();
+        } else if (Preferences.comparePreferenceKey(key, R.string.pref_KEY_B_CHEATMODE)) {
+            boolean newValue = sharedPreferences.getBoolean(key, false);
+            Preferences.GLOBAL_CHEATMODE = Utils.parseBoolean(newValue);
         }
     }
 
