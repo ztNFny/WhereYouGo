@@ -202,12 +202,22 @@ public class MapsforgeActivity extends MapActivity implements IRefreshable {
         }
     };
 
-    private static Polyline createPolyline(List<GeoPoint> geoPoints) {
+    private static Polyline createPolyline(List<GeoPoint> geoPoints, int color) {
         PolygonalChain polygonalChain = new PolygonalChain(geoPoints);
         Paint paintStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintStroke.setStyle(Paint.Style.STROKE);
-        paintStroke.setColor(Color.MAGENTA);
+        paintStroke.setColor(color);
         paintStroke.setStrokeWidth(4);
+
+        return new Polyline(polygonalChain, paintStroke);
+    }
+
+	private static Polyline createPolylineArea(List<GeoPoint> geoPoints, int color) {
+        PolygonalChain polygonalChain = new PolygonalChain(geoPoints);
+        Paint paintStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintStroke.setStyle(Paint.Style.FILL);
+        paintStroke.setColor(color);
+        paintStroke.setAlpha(50);
 
         return new Polyline(polygonalChain, paintStroke);
     }
@@ -998,11 +1008,18 @@ public class MapsforgeActivity extends MapActivity implements IRefreshable {
             for (MapPointPack pack : packs) {
                 if (pack.isPolygon()) {
                     List<GeoPoint> geoPoints = new ArrayList<>();
+
+                    int color = Color.MAGENTA;
+                    if (pack.getResource() != 0) {
+                        color = pack.getResource();
+                    }
+
                     for (MapPoint mp : pack.getPoints()) {
                         GeoPoint geoPoint = new GeoPoint(mp.getLatitude(), mp.getLongitude());
                         geoPoints.add(geoPoint);
                     }
-                    overlayLines.add(createPolyline(geoPoints));
+                    overlayLines.add(createPolyline(geoPoints, color));
+                    overlayLines.add(createPolylineArea(geoPoints, color));
                 } else {
                     Drawable icon;
                     if (pack.getIcon() == null) {

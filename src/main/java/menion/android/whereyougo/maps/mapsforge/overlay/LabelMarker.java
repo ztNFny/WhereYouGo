@@ -33,11 +33,17 @@ import org.mapsforge.core.util.MercatorProjection;
  */
 public class LabelMarker extends Marker {
     static Paint labelPaint;
+    static Paint textPaint;
     static Paint labelBgPaint;
 
     static {
         labelPaint = new Paint();
         labelPaint.setStyle(android.graphics.Paint.Style.STROKE);
+        labelPaint.setTextSize(42);
+        textPaint = new Paint();
+        textPaint.setStyle(Paint.Style.FILL);
+        textPaint.setTextSize(42);
+        textPaint.setColor(Color.BLACK);
         // labelPaint.setTextAlign(Align.CENTER);
         labelBgPaint = new Paint();
         labelBgPaint.setColor(Color.argb(192, 255, 255, 255));
@@ -114,7 +120,7 @@ public class LabelMarker extends Marker {
                 new Rect(x - margin, y - margin, x + text.width() + margin, y + text.height() + margin);
         canvas.drawRect(r, labelBgPaint);
         canvas.drawRect(r, labelPaint);
-        canvas.drawText(label, x, y + text.height(), labelPaint);
+        canvas.drawText(label, x, y + text.height(), textPaint);
 
         return true;
     }
