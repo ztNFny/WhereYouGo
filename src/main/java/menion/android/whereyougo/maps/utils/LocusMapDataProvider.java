@@ -32,6 +32,7 @@ import locus.api.objects.extra.ExtraStyle.LineStyle.Units;
 import locus.api.objects.extra.Location;
 import locus.api.objects.extra.Track;
 import locus.api.objects.extra.Waypoint;
+import menion.android.whereyougo.R;
 import menion.android.whereyougo.gui.activity.MainActivity;
 import menion.android.whereyougo.gui.activity.wherigo.DetailsActivity;
 import menion.android.whereyougo.gui.utils.UtilsWherigo;
@@ -95,7 +96,9 @@ public class LocusMapDataProvider implements MapDataProvider {
     }
 
     public void addZone(Zone z, boolean mark) {
-        if (z == null || !z.isLocated() || !z.isVisible())
+        if (z == null || !z.isLocated())
+            return;
+        if (!z.isVisible() && !Preferences.getBooleanPreference(R.string.pref_KEY_B_CHEATMODE))
             return;
 
         ArrayList<Location> locs = new ArrayList<>();
@@ -110,7 +113,13 @@ public class LocusMapDataProvider implements MapDataProvider {
 
         Track track = new Track();
         ExtraStyle style = new ExtraStyle();
-        style.setLineStyle(ColorStyle.SIMPLE, Color.MAGENTA, 2.0f, Units.PIXELS);
+        if (z.isVisible()) {
+            style.setPolyStyle(Color.argb(50, 255, 0, 0), true, false);
+            style.setLineStyle(ColorStyle.SIMPLE, Color.RED, 2.0f, Units.PIXELS);
+        } else {
+            style.setPolyStyle(Color.argb(50, 0, 0, 255), true, false);
+            style.setLineStyle(ColorStyle.SIMPLE, Color.BLUE, 2.0f, Units.PIXELS);
+        }
         track.styleNormal = style;
         track.setPoints(locs);
         track.setName(z.name);
